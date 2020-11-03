@@ -1,0 +1,7 @@
+main: com.stephen.plugin.Main
+version: 1.0v
+name: MiniGame
+api-version: 1.16
+commands:
+  arena:
+
