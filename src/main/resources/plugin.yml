@@ -1,0 +1,6 @@
+name: MainPlugin
+version: '${project.version}'
+main: com.matthew.main.Main
+api-version: 1.19
+authors: [ Matthew, Reiley ]
+description: Mini Game For Minecraft
