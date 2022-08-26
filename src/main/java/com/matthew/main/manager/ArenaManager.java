@@ -16,7 +16,9 @@ public class ArenaManager {
 
     public ArenaManager(Main main) {
         FileConfiguration config = main.getConfig();
-        for (String str : config.getConfigurationSection("arenas.").getKeys(false)) {
+        System.out.println(config.getConfigurationSection("arenas").getKeys(false));
+        for (String str : config.getConfigurationSection("arenas").getKeys(false)) {
+            System.out.println(str);
             arenas.add(new Arena(main, Integer.parseInt(str), new Location(
                     Bukkit.getWorld(config.getString("arenas." + str + ".world")),
                     config.getDouble("arenas." + str + ".x"),

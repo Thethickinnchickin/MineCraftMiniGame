@@ -16,12 +16,13 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         ConfigManager.setupConfig(this);
-        arenaManager = new ArenaManager(this);
+        this.arenaManager = new ArenaManager(this);
 
-        Bukkit.getPluginManager().registerEvents(new ConnectListener(), this);
+
+        Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
-
-        getCommand("arena").setExecutor(new ArenaCommand());
+        System.out.println("you peice of shit");
+        getCommand("arena").setExecutor(new ArenaCommand(this));
 
 
     }
@@ -31,5 +32,5 @@ public final class Main extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public ArenaManager getArenaManager() { return arenaManager; }
+    public ArenaManager getArenaManager() { return this.arenaManager; }
 }

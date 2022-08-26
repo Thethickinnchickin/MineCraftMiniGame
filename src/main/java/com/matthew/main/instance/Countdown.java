@@ -27,7 +27,7 @@ public class Countdown extends BukkitRunnable {
     public void run() {
         if(countdownSeconds == 0) {
             cancel();
-            //arena state
+            this.arena.getGame().start();
             return;
         }
 

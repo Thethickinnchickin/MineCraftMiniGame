@@ -3,6 +3,7 @@ package com.matthew.main.listener;
 import com.matthew.main.GameState;
 import com.matthew.main.Main;
 import com.matthew.main.instance.Arena;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -17,11 +18,18 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
-
+        System.out.println(e.getBlock().getBiome());
         Arena arena = main.getArenaManager().getArena(e.getPlayer());
         if (arena != null) {
             if (arena.getState().equals(GameState.LIVE)) {
-                arena.getGame().addPoint(e.getPlayer());
+                if(e.getBlock().getType() == Material.SAND) {
+                    arena.getGame().addPoint(e.getPlayer(), "gold");
+                } else if (e.getBlock().getType() == Material.DIRT) {
+                    arena.getGame().addPoint(e.getPlayer(), "silver");
+                } else {
+                    arena.getGame().addPoint(e.getPlayer(), "other");
+                }
+
             }
         }
     }
