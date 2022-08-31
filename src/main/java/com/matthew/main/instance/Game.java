@@ -3,6 +3,9 @@ package com.matthew.main.instance;
 import com.matthew.main.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -18,6 +21,7 @@ public class Game {
     private Arena arena;
     private HashMap<UUID, Integer> points;
     private Score website;
+    private BossBar bossBar;
 
     public Game(Arena arena) {
         this.arena = arena;
@@ -38,27 +42,30 @@ public class Game {
             Objective obj = board.registerNewObjective("Test", "dummy");
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
             obj.setDisplayName(ChatColor.GREEN.toString()
-                    + ChatColor.BOLD + "BLOCK BREAKERS!");
-//            obj.setDisplayName(ChatColor.AQUA + "FIRST TO 20 WINS");
-//            obj.setDisplayName(ChatColor.RED + " - SAND = 3 POINTS");
-//            obj.setDisplayName(ChatColor.WHITE + " -  DIRT = 2 POINTS");
-//            obj.setDisplayName(ChatColor.BLUE + " - ELSE = 1 POINT");
+                    + ChatColor.BOLD + "PLAYERS POINTS");
+//
 
             if(player != null) {
-                player.setHealth(20);
-                player.setPlayerListHeader(ChatColor.RED + "Hey there fag");
-//                player.sendTitle(ChatColor.RED + "BLOCK BREAKERS! First to 20 points win",
-//                        ChatColor.GRAY + " - SAND = 3 POINTS  - SAND = 3 POINTS - ELSE = 1 POINT",
-//                        0, 999999, 0);
+                this.bossBar = Bukkit.createBossBar(
+                        ChatColor.LIGHT_PURPLE + "Block Breakers"
+                                 + ChatColor.GOLD + "-GOLD: 3 points"  +
+                                 ChatColor.GRAY + "-SILVER: 2 points"  +
+                                 ChatColor.WHITE +  "-ELSE 1 points",
+                        BarColor.BLUE,
+                        BarStyle.SEGMENTED_10
+                );
+
+                this.bossBar.addPlayer(player);
+
+
             }
 
 
 
-            this.website = obj.getScore(ChatColor.YELLOW + "YOUR POINTS!");
+            this.website = obj.getScore(ChatColor.BLUE + "Name: " + player.getName());
             this.website.setScore(0);
 
 
-            Score name = obj.getScore(ChatColor.BLUE + "Name: " + player.getName());
 
             player.setScoreboard(board);
 
@@ -96,6 +103,7 @@ public class Game {
                 Player player1 = Bukkit.getPlayer(playerToReset);
                 player1.resetTitle();
                 player1.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+                this.bossBar.removeAll();
             }
             arena.reset(true);
             return;

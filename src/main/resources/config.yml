@@ -1,5 +1,5 @@
 required-players: 1
-countdown-seconds: 30
+countdown-seconds: 5
 lobby-spawn:
   world: "world"
   x: 164.5
