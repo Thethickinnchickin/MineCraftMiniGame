@@ -28,5 +28,15 @@ public class ConfigManager {
                 (float) config.getDouble("lobby-spawn.pitch"));
     }
 
+    public static Location getBlockBreakersLobbySpawn() {
+        return new Location(
+                Bukkit.getWorld(config.getString("block-breakers-lobby.world")),
+                config.getDouble("block-breakers-lobby.x"),
+                config.getDouble("block-breakers-lobby.y"),
+                config.getDouble("block-breakers-lobby.z"),
+                (float) config.getDouble("block-breakers-lobby.yaw"),
+                (float) config.getDouble("block-breakers-lobby.pitch"));
+    }
+
 
 }

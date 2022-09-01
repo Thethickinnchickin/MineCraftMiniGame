@@ -4,8 +4,11 @@ import com.matthew.main.instance.Arena;
 import com.matthew.main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +21,11 @@ public class ArenaManager {
         FileConfiguration config = main.getConfig();
         System.out.println(config.getConfigurationSection("arenas").getKeys(false));
         for (String str : config.getConfigurationSection("arenas").getKeys(false)) {
-            System.out.println(str);
+            World world = Bukkit.createWorld(
+                    new WorldCreator(config.getString("arenas."+ str + ".world")));
+
+            world.setAutoSave(false);
+
             arenas.add(new Arena(main, Integer.parseInt(str), new Location(
                     Bukkit.getWorld(config.getString("arenas." + str + ".world")),
                     config.getDouble("arenas." + str + ".x"),

@@ -1,12 +1,16 @@
 package com.matthew.main.instance;
 
 import com.matthew.main.GameState;
+import com.matthew.main.manager.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -36,6 +40,11 @@ public class Game {
         for (UUID uuid : arena.getPlayers()) {
 
             Player player = Bukkit.getPlayer(uuid);
+
+            player.getInventory().addItem(new ItemStack(Material.IRON_PICKAXE));
+
+
+            player.setGameMode(GameMode.CREATIVE);
 
             Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
 
@@ -100,6 +109,7 @@ public class Game {
         if (playerPoints >= 20) {
             arena.sendMessage(ChatColor.GOLD + player.getName() + "Has WON! Thanks for playing :)");
             for(UUID playerToReset : arena.getPlayers()) {
+                player.getInventory().remove(Material.IRON_PICKAXE);
                 Player player1 = Bukkit.getPlayer(playerToReset);
                 player1.resetTitle();
                 player1.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
@@ -114,5 +124,8 @@ public class Game {
     public int getPoints(Player player) {
         return points.get(player.getUniqueId());
     }
+
+
+    public BossBar getBossBar() { return  bossBar; }
 
 }

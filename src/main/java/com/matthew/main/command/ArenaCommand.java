@@ -4,10 +4,12 @@ import com.matthew.main.GameState;
 import com.matthew.main.Main;
 import com.matthew.main.instance.Arena;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
 
 public class ArenaCommand implements CommandExecutor {
 
@@ -33,6 +35,9 @@ public class ArenaCommand implements CommandExecutor {
                 Arena arena = main.getArenaManager().getArena(player);
                 if (arena != null) {
                     player.sendMessage(ChatColor.RED + "You left the arena");
+                    player.getInventory().remove(Material.IRON_PICKAXE);
+                    main.getArenaManager().getArena(player).getGame().getBossBar().removeAll();
+                    player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
                     arena.removePlayer(player);
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");

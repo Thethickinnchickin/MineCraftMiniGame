@@ -3,10 +3,9 @@ package com.matthew.main.instance;
 import com.matthew.main.GameState;
 import com.matthew.main.Main;
 import com.matthew.main.manager.ConfigManager;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 import com.matthew.main.instance.Game;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.units.qual.C;
 
@@ -18,6 +17,8 @@ public class Arena {
 
     private int id;
     private Location spawn;
+    private Location lobbySpawn;
+    private FileConfiguration config;
 
     private GameState state;
     private Main main;
@@ -35,6 +36,8 @@ public class Arena {
         this.countdown = new Countdown(main,this);
         this.game = new Game(this);
         this.main = main;
+        this.config = main.getConfig();
+        this.lobbySpawn = ConfigManager.getBlockBreakersLobbySpawn();
     }
 
     /* Game */
@@ -52,6 +55,16 @@ public class Arena {
             players.clear();
         }
         sendTitle("", "");
+
+        //resetting the world for the next game
+
+        String worldName = spawn.getWorld().getName();
+
+        Bukkit.unloadWorld(spawn.getWorld(), false);
+        World world = Bukkit.createWorld(
+                new WorldCreator(worldName));
+        world.setAutoSave(false);
+
         state = GameState.RECRUITING;
         countdown.cancel();
         countdown = new Countdown(main, this);
@@ -77,9 +90,12 @@ public class Arena {
     //Adding Player to Arena Players List
     public void addPlayer(Player player) {
         players.add(player.getUniqueId());
-        player.teleport(spawn);
+        player.teleport(lobbySpawn);
 
         if (state.equals(GameState.RECRUITING) && players.size() >= ConfigManager.getRequiredPlayers()) {
+            for(UUID uuid : players) {
+                Bukkit.getPlayer(uuid).teleport(spawn);
+            }
             countdown.start();
         }
     }
