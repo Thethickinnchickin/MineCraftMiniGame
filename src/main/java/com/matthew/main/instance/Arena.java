@@ -61,9 +61,11 @@ public class Arena {
             players.clear();
 
             String worldName = spawn.getWorld().getName();
-            System.out.println(new WorldCreator(worldName));
-            Bukkit.unloadWorld(spawn.getWorld(), false);
-            World world = Bukkit.createWorld(new WorldCreator(worldName));
+            System.out.println("start");
+            Bukkit.unloadWorld(spawn.getWorld().getName(), false);
+            System.out.println("finish");
+            FileConfiguration config = main.getConfig();
+            World world = new WorldCreator(worldName).createWorld();
             world.setAutoSave(false);
 
         }
