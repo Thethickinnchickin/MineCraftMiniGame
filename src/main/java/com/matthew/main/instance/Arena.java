@@ -2,6 +2,7 @@ package com.matthew.main.instance;
 
 import com.matthew.main.GameState;
 import com.matthew.main.Main;
+import com.matthew.main.listener.GameListener;
 import com.matthew.main.manager.ConfigManager;
 import org.bukkit.*;
 import com.matthew.main.instance.Game;
@@ -23,9 +24,11 @@ public class Arena {
     private GameState state;
     private Main main;
 
+
     private List<UUID> players;
     private Countdown countdown;
     private Game game;
+    private boolean canJoin;
 
 
     public Arena(Main main, int id, Location spawn) {
@@ -38,6 +41,7 @@ public class Arena {
         this.main = main;
         this.config = main.getConfig();
         this.lobbySpawn = ConfigManager.getBlockBreakersLobbySpawn();
+        this.canJoin = true;
     }
 
     /* Game */
@@ -46,29 +50,31 @@ public class Arena {
         game.start();
     }
 
-    public void reset(boolean kickPlayers) {
-        if (kickPlayers) {
+    public void reset() {
+
+        if (state == GameState.LIVE) {
+            this.canJoin = false;
             Location loc = ConfigManager.getLobbySpawn();
             for (UUID uuid : players) {
                 Bukkit.getPlayer(uuid).teleport(loc);
             }
             players.clear();
+
+            String worldName = spawn.getWorld().getName();
+            System.out.println(new WorldCreator(worldName));
+            Bukkit.unloadWorld(spawn.getWorld(), false);
+            World world = Bukkit.createWorld(new WorldCreator(worldName));
+            world.setAutoSave(false);
+
         }
-        sendTitle("", "");
 
-        //resetting the world for the next game
-
-        String worldName = spawn.getWorld().getName();
-
-        Bukkit.unloadWorld(spawn.getWorld(), false);
-        World world = Bukkit.createWorld(
-                new WorldCreator(worldName));
-        world.setAutoSave(false);
 
         state = GameState.RECRUITING;
         countdown.cancel();
         countdown = new Countdown(main, this);
         game = new Game(this);
+
+
     }
 
     /* Arena Tools */
@@ -91,11 +97,9 @@ public class Arena {
     public void addPlayer(Player player) {
         players.add(player.getUniqueId());
         player.teleport(lobbySpawn);
+        System.out.println(ConfigManager.getRequiredPlayers());
 
         if (state.equals(GameState.RECRUITING) && players.size() >= ConfigManager.getRequiredPlayers()) {
-            for(UUID uuid : players) {
-                Bukkit.getPlayer(uuid).teleport(spawn);
-            }
             countdown.start();
         }
     }
@@ -106,12 +110,12 @@ public class Arena {
 
         if (state == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()) {
             sendMessage(ChatColor.RED + "There is not enough players. Countdown stopped.");
-            reset(false);
+            reset();
         }
 
         if (state == GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers()) {
             sendMessage(ChatColor.RED + "The game has ended as too many players left");
-            reset(false);
+            reset();
         }
     }
 
@@ -129,4 +133,15 @@ public class Arena {
 
     //Getting Current Game
     public Game getGame() { return game; }
+
+    //Getting world of Arena
+    public World getWorld() { return spawn.getWorld(); }
+
+    //Toggle canJoin variable
+    public void setCanJoin(boolean canJoinNew) { this.canJoin = canJoinNew; }
+
+    public boolean getCanJoin() { return this.canJoin; }
+
+
+    public Location getArenaSpawn() { return this.spawn;}
 }

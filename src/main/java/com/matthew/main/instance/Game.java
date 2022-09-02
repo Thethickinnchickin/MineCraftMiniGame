@@ -33,6 +33,7 @@ public class Game {
     }
 
     public void start() {
+
         arena.setState(GameState.LIVE);
         arena.sendMessage(ChatColor.GREEN + "GAME HAS STARTED!" +
                 " Your objective is to break 20 blocks in the fastest time. Good luck!");
@@ -40,6 +41,8 @@ public class Game {
         for (UUID uuid : arena.getPlayers()) {
 
             Player player = Bukkit.getPlayer(uuid);
+
+            player.teleport(arena.getArenaSpawn());
 
             player.getInventory().addItem(new ItemStack(Material.IRON_PICKAXE));
 
@@ -113,9 +116,11 @@ public class Game {
                 Player player1 = Bukkit.getPlayer(playerToReset);
                 player1.resetTitle();
                 player1.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+
                 this.bossBar.removeAll();
             }
-            arena.reset(true);
+            points.clear();
+            arena.reset();
             return;
         }
 

@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 
 public class GameListener implements Listener {
 
@@ -15,6 +16,7 @@ public class GameListener implements Listener {
     public GameListener(Main main) {
         this.main = main;
     }
+
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
@@ -26,7 +28,8 @@ public class GameListener implements Listener {
                     arena.getGame().addPoint(e.getPlayer(), "gold");
                 } else if (e.getBlock().getType() == Material.DIRT) {
                     arena.getGame().addPoint(e.getPlayer(), "silver");
-                } else {
+                } else if(e.getBlock().getType() != Material.DIAMOND_BLOCK
+                || e.getBlock().getType() != Material.GOLD_BLOCK) {
                     arena.getGame().addPoint(e.getPlayer(), "other");
                 }
 

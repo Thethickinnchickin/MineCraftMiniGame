@@ -9,6 +9,8 @@ import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.world.WorldLoadEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,8 @@ public class ArenaManager {
         }
     }
 
+
+
     public List<Arena> getArenas() { return arenas; }
 
     public Arena getArena(Player player) {
@@ -50,6 +54,15 @@ public class ArenaManager {
     public Arena getArena(int id) {
         for (Arena arena : arenas) {
             if(arena.getId() == id) {
+                return arena;
+            }
+        }
+        return null;
+    }
+
+    public Arena getArena(World world) {
+        for (Arena arena : arenas) {
+            if(arena.getWorld().getName().equals(world.getName())) {
                 return arena;
             }
         }

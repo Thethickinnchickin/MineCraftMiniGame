@@ -4,6 +4,7 @@ import com.matthew.main.command.ArenaCommand;
 import com.matthew.main.event.BlockBreakersDoorEvent;
 import com.matthew.main.listener.ConnectListener;
 import com.matthew.main.listener.GameListener;
+import com.matthew.main.listener.WorldLoadEvent;
 import com.matthew.main.manager.ArenaManager;
 import com.matthew.main.manager.ConfigManager;
 import org.bukkit.Bukkit;
@@ -23,6 +24,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BlockBreakersDoorEvent(this), this);
+        Bukkit.getPluginManager().registerEvents(new WorldLoadEvent(this), this);
         getCommand("arena").setExecutor(new ArenaCommand(this));
 
 
